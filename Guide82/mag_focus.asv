@@ -1,0 +1,28 @@
+% Setup focus window
+if (ishandle(fh4)==1)
+    delete(fh4)% Let Focus button on main panel toggle
+    mag_focus_done=1;
+else
+    mag_focus_done=0;
+    mag_focus_previous=0;
+    mag_focus_data=[NaN NaN NaN];
+    fh4=figure(4);
+    set(fh4,'menubar','none','name','Focus82 (waiting for an image)','numbertitle','off','WindowButtonMotionFcn', ... 
+        'mag_move_focus','busy','cancel','inter','off','pos',[3 45 560 420]);
+    esc_string='currentkey'; % Gives you all the key down data
+    set(fh4,'KeyPressFcn','mag_current_character=get(fh1,esc_string);');
+    hold on
+    for mag_a=2:83,
+        eval(['f5' num2str(mag_a) '=plot(NaN,NaN,''+'',''markersize'',18,''linewidth'',3, ''ButtonDownFcn'',''mag_parabola(''', num2str(mag_a), ')', '''BusyAction'',''cancel'');']); % Create 82 markers
+    end
+    f41=title('');
+    f42=xlabel('Focus encoder');
+    f43=ylabel('FWHM');
+    f45=plot(NaN); % parabola
+    f46=plot(NaN,NaN,'*','color','red'); % minimum point on parabola
+    f48=uicontrol('style','push','string','Done', 'fontweight','bold', ...
+                'fontsize',12,'position',[5 5 60 30], 'callback','mag_focus_done=1;','inter','off','busy','cancel');
+    grid on
+    hold off
+end
+
